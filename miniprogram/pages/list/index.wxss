@@ -74,8 +74,16 @@
   width: 25px;
   height: 36px;
   position: absolute;
-  right: 30rpx;
+  right: 70rpx;
   top: 0;
+}
+
+.tianjiaricheng{
+  width: 40rpx;
+  height: 40rpx;
+  position: absolute;
+  right: 80rpx;
+  top: 170rpx;
 }
 
 .countTime{

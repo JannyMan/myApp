@@ -167,6 +167,24 @@ Page({
     }
   },
 
+  addRicheng(e){
+    console.log(e)
+    let {startDateTime, endDateTime, title, desc} = e.currentTarget.dataset.item
+    wx.addPhoneRepeatCalendar({
+      title,
+      allDay: true,
+      startTime: Math.floor(new Date(startDateTime).getTime()) / 1000,
+      endTime: Math.floor(new Date(endDateTime).getTime()) / 1000,
+      description: desc,
+      success: res => {
+        wx.showToast({
+          title: '添加日程成功！',
+          icon: 'success'
+        })
+      }
+    })
+  },
+
   // 点击左侧单选框时，切换待办状态
   async finishTodo(e) {
     // 根据序号获得触发切换事件的待办
@@ -190,6 +208,10 @@ Page({
       data: {
         freq: 1
       }
+    })
+    wx.showToast({
+      title: '任务已完成！',
+      icon: "success"
     })
     // 快速刷新数据
     todo.freq = 1

@@ -38,7 +38,8 @@
          </view>
          <!-- <image class="star" src="../../images/file/star.png" /> -->
          <image wx:if="{{item.star}}" class="star" src="../../images/file/star.png" />
-          <image data-index='{{index}}' class="file" src="../../images/file/file.png" catchtap="toFileList" />
+         <image class="tianjiaricheng" src="../../images/tianjiaricheng.png" catchtap="addRicheng" data-item="{{item}}" />
+        <image data-index='{{index}}' class="file" src="../../images/file/file.png" catchtap="toFileList" />
           <!-- <view class="countTime" wx:if="{{item.status == 1 || item.status == 2}}">
             <text wx:if="{{item.status == 1}}" style="margin-right: 20rpx;">距离开始</text>
             <text wx:if="{{item.status == 2}}" style="margin-right: 20rpx;">距离结束还剩</text>
