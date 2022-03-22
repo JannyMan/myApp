@@ -1,4 +1,5 @@
 {
+  "navigationBarTitleText": "每日待办事项",
   "usingComponents": {
     "footer": "../../components/footer",
     "mp-badge": "../../miniprogram_npm/weui-miniprogram/badge/badge",

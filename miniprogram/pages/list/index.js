@@ -5,7 +5,8 @@ Page({
   data: {
     todos: [], // 用户的所有待办事项
     pending: [], // 未完成待办事项
-    finished: [] // 已完成待办事项
+    finished: [], // 已完成待办事项
+    expired: []   // 已过期
   },
 
   onShow() {
@@ -25,26 +26,35 @@ Page({
         const {
           data
         } = res
-        
+        // 只要今天的数据
+        let nowDate = new Date()
         data && data.map(v => {
           let {date, startTime, endTime} = v
           if(date){
             v.formatDate = date.replace(/-/g, '/')
             v.startDateTime = date.replace(/-/g, '/') + ' ' + startTime
             v.endDateTime = date.replace(/-/g, '/') + ' ' + endTime
+            let nowTime = Math.floor((new Date()).getTime() / 1000)
+            let endTimeStmp = Math.floor((new Date(v.formatDate + ' ' + endTime).getTime())  / 1000)
+            console.log(this.getSameDate(nowDate, v.formatDate))
+            v.nowDate = this.getSameDate(nowDate, v.formatDate) ? 1 : 0
+            if(v.freq == 0 && nowTime > endTimeStmp){
+              v.freq = 2
+            }
           }
         })
-        let pending = data.filter(todo => todo.freq === 0)
-        let finished = data.filter(todo => todo.freq === 1)
-        pending.map(v => {
-          console.log(v)
-        })
+        console.log(data)
+        
+        let pending = data.filter(todo => todo.freq === 0 && todo.nowDate)
+        let finished = data.filter(todo => todo.freq === 1 && todo.nowDate)
+        let expired = data.filter(todo => todo.freq == 2 && todo.nowDate)
         // 存储查询到的数据
         this.setData({
           // data 为查询到的所有待办事项列表
           todos: data,
           // 通过 filter 函数，将待办事项分为未完成和已完成两部分
           pending,
+          expired,
           finished
         })
         this.getStatus()
@@ -65,8 +75,8 @@ Page({
   },
 
   getStatus(){
-    let pending = this.data.pending
-    pending.forEach(v => {
+    let {todos} = this.data
+    todos.forEach(v => {
       let {date, startTime, endTime} = v
       if(date){
         v.formatDate = date.replace(/-/g, '/')
@@ -74,6 +84,9 @@ Page({
           let nowTime = Math.floor((new Date()).getTime() / 1000)
           let startTimeStmp = Math.floor((new Date(v.formatDate + ' ' + startTime).getTime()) / 1000)
           let endTimeStmp = Math.floor((new Date(v.formatDate + ' ' + endTime).getTime())  / 1000)
+          if(v.freq == 0 && nowTime > endTimeStmp){
+            v.freq = 2
+          }
           if(nowTime - startTimeStmp < 0){
             // 未开始
             v.status = 1
@@ -90,9 +103,31 @@ Page({
         }
       }
     })
+    let pending = todos.filter(todo => todo.freq === 0 && todo.nowDate)
+    let finished = todos.filter(todo => todo.freq === 1 && todo.nowDate)
+    let expired = todos.filter(todo => todo.freq == 2 && todo.nowDate)
+    console.log(expired)
     this.setData({
-      pending
+      pending,
+      expired,
+      finished
     })
+  },
+
+  // 判断是否在同一天
+  getSameDate(date, otherStmp){
+    let nowY = date.getFullYear()
+    let nowM = date.getMonth() + 1
+    let nowD = date.getDate()
+    let otherDate = new Date(otherStmp + ' 00:00:00')
+    let otherY = otherDate.getFullYear()
+    let otherM = otherDate.getMonth() + 1
+    let otherD = otherDate.getDate()
+    if(nowY == otherY && nowM == otherM && nowD == otherD){
+      return true
+    }else{
+      return false
+    }
   },
 
   getCountDay(time){
@@ -216,8 +251,8 @@ Page({
     // 快速刷新数据
     todo.freq = 1
     this.setData({
-      pending: this.data.todos.filter(todo => todo.freq === 0),
-      finished: this.data.todos.filter(todo => todo.freq === 1)
+      pending: this.data.todos.filter(todo => todo.freq === 0 && todo.nowDate),
+      finished: this.data.todos.filter(todo => todo.freq === 1 && todo.nowDate)
     })
   },
 
@@ -235,8 +270,8 @@ Page({
     })
     todo.freq = 0
     this.setData({
-      pending: this.data.todos.filter(todo => todo.freq === 0),
-      finished: this.data.todos.filter(todo => todo.freq === 1)
+      pending: this.data.todos.filter(todo => todo.freq === 0 && todo.nowDate),
+      finished: this.data.todos.filter(todo => todo.freq === 1 && todo.nowDate)
     })
   },
 

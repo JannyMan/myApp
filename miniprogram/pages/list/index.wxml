@@ -56,6 +56,35 @@
     </view>
   </view>
   <view class="form-group_label">
+    已过期
+    <mp-badge wx:if="{{expired}}" content="{{expired.length}}" style="margin-left: 5px;" />
+  </view>
+  <view class="form-group" wx:if="{{expired && expired.length > 0}}">
+    <view class="form-cell" wx:for="{{expired}}" wx:key="index">
+      <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' bindbuttontap="slideButtonTap">
+        <view class="slide">
+          <image class="checkbox" data-index='{{index}}' src="../../images/list/pending.png"/>
+          <view class="todo-info">
+            <view class="todo-info_title">{{util.filterStr(item.title, 10)}}</view>
+            <view class="todo-info_desc">{{util.filterStr(item.desc, 10)}}</view>
+            <view class="todo-info_desc cur" wx:if="{{item.sy_seconds}}">
+              <text wx:if="{{item.status == 1}}" style="margin-right: 20rpx;">距离开始</text>
+              <text wx:if="{{item.status == 2}}" style="margin-right: 20rpx;">距离结束还剩</text>
+              <text wx:if="{{item.sy_days > 0}}">{{item.sy_days}}</text>
+              <text wx:if="{{item.sy_days > 0}}">天</text>
+              <text>{{item.sy_hours}}</text>
+              <text>：</text>
+              <text>{{item.sy_minutes}}</text>
+              <text>：</text>
+              <text>{{item.sy_seconds}}</text>
+            </view>
+            <view class="todo-info_desc" wx:if="{{item.status == 3}}">已过期</view>
+          </view>
+        </view>
+      </mp-slideview>
+    </view>
+  </view>
+  <view class="form-group_label">
     已完成
     <mp-badge wx:if="{{finished}}" content="{{finished.length}}" style="margin-left: 5px;" />
   </view>
@@ -67,6 +96,18 @@
           <view class="todo-info">
             <view class="todo-info_title done">{{util.filterStr(item.title, 10)}}</view>
             <view class="todo-info_desc">{{util.filterStr(item.desc, 10)}}</view>
+            <view class="todo-info_desc cur" wx:if="{{item.sy_seconds}}">
+              <text wx:if="{{item.status == 1}}" style="margin-right: 20rpx;">距离开始</text>
+              <text wx:if="{{item.status == 2}}" style="margin-right: 20rpx;">距离结束还剩</text>
+              <text wx:if="{{item.sy_days > 0}}">{{item.sy_days}}</text>
+              <text wx:if="{{item.sy_days > 0}}">天</text>
+              <text>{{item.sy_hours}}</text>
+              <text>：</text>
+              <text>{{item.sy_minutes}}</text>
+              <text>：</text>
+              <text>{{item.sy_seconds}}</text>
+            </view>
+            <view class="todo-info_desc" wx:if="{{item.status == 3}}">已结束</view>
           </view>
         </view>
       </mp-slideview>
