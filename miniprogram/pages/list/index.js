@@ -296,5 +296,13 @@ Page({
     wx.navigateTo({
       url: '../../pages/add/index',
     })
-  }
+  },
+
+  onHide(){
+    clearInterval(this.data.timer)
+  },
+
+  onUnload(){
+    clearInterval(this.data.timer)
+  },
 })
