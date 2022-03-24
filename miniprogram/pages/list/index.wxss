@@ -5,7 +5,7 @@
 }
 
 .container:last-child {
-  margin-bottom: calc( var(--footer-height) + 24px );
+  padding-bottom: calc( var(--footer-height) + 24px );
 }
 
 .background {
